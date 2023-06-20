@@ -11,7 +11,9 @@ def caso_select(command):
             getNextToken(command)
             if command[0] not in comandos_reservados:
                 getNextToken(command)
-                if command[0] == 'ORDER':
+                if command[0] == ';':
+                    return True
+                elif command[0] == 'ORDER':
                     getNextToken(command)
                     if command[0] == 'BY':
                         getNextToken(command)
@@ -29,27 +31,33 @@ def caso_select(command):
                                 getNextToken(command)
                                 if command[0] == ';':
                                     return True
-                elif command[0] == ';':
+    elif command[0] not in comandos_reservados:
+        getNextToken(command)
+        if command[0] == ',':
+            getNextToken(command)
+            while True:
+                if command[0] not in comandos_reservados:
                     getNextToken(command)
-                    if command[0] == 'SELECT':
+                    if command[0] == 'FROM':
                         getNextToken(command)
-                        while True:
-                            if command[0] not in comandos_reservados:
-                                getNextToken(command)
-                                if command[0] == 'FROM':
-                                    getNextToken(command)
-                                    break
-                                elif command[0] == ',':
-                                    getNextToken(command)
-                                else:
-                                    return False    
-                            else:
-                                return False
-                    if command[0] not in comandos_reservados:
+                        break
+                    elif command[0] == ',':
                         getNextToken(command)
-                        if command[0] == ';':
-                            return True
-
+                    else:
+                        return False
+                else:
+                    return False
+            if command[0] not in comandos_reservados:
+                getNextToken(command)
+                if command[0] == ';':
+                    return True
+        elif command[0] == 'FROM':
+            getNextToken(command)
+            if command[0] not in comandos_reservados:
+                getNextToken(command)
+                if command[0] == ';':
+                    return True
+            
     return False
     
 
@@ -200,10 +208,6 @@ def caso_insert(command):
     return False
     
 
-
-            
-
-
 def alteraComando(command):
     command = command.replace('(', ' ( ')
     command = command.replace(')', ' ) ')
@@ -243,3 +247,7 @@ while True:
         print('Fim da execução')
         break
 
+# SELECT * FROM alunos;
+# SELECT nome, idade FROM alunos;
+# DELETE FROM alunos WHERE idade = 20;
+# UPDATE alunos SET nome = bruno WHERE nome = markesley;
